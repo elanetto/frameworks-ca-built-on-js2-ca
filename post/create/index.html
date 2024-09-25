@@ -7,10 +7,44 @@
     <script type="module" src="/src/app.js"></script>
   </head>
   <body>
-    <h1>Create Post</h1>
 
-    <form name="createPost">
-      <button>Create Post</button>
+    <h1>Create Scroll</h1>
+
+    <form name="createPost" id="new-blogpost-form">
+      <div class="new-blogpost-form-inputs">
+          <ul>
+              <li>
+                  <label for="blog-title">Title:</label>
+                  <input id="blog-title" placeholder="Title" type="text">
+              </li>
+              <li>
+                  <label for="blog-image">Image:</label>
+                  <input id="blog-image-input" placeholder="Paste URL for image here" type="text">
+                  <button id="test-blog-image-btn">Test image</button>
+                  <img id="blog-image-preview" src="https://github.com/elanetto/images/blob/main/img/adventure/adventure-img_optimized_200.png?raw=true" alt="blogpost image">
+              </li>
+              <li>
+                  <label for="blog-tag">Choose a tag:</label>
+                  <select id="blog-tag" name="tag" required>
+                      <option value="" disabled selected>Choose a tag</option>
+                      <option value="Quest">Quest</option>
+                      <option value="Loot">Loot</option>
+                      <option value="Adventure">Adventure</option>
+                      <option value="Danger">Danger</option>
+                      <option value="Skills">Skills</option>
+                  </select>
+              </li>
+              <li>
+                  <label for="blog-content">Main content text:</label>
+                  <textarea id="blog-content" class="input-blog-body" placeholder="content" type="text"></textarea>
+              </li>
+          </ul>
+          <button class="btn-admin" id="submit-post-btn" type="submit">Send Scroll</button>
+      </div>
     </form>
+
+    <!-- Add this element -->
+    <p id="welcome-username"></p>
+
   </body>
 </html>
