@@ -16,6 +16,9 @@ export default defineConfig({
         post: resolve(__dirname, "./post/index.html"),
         editPost: resolve(__dirname, "./post/edit/index.html"),
         createPost: resolve(__dirname, "./post/create/index.html"),
+        
+        // added this to try to fix the error, vite could not find app.js:
+        app: resolve(__dirname, "./src/app.js"),
       },
     },
   },

@@ -1,113 +1,75 @@
-// import { API_SOCIAL_POSTS } from "./constants";
+// not my code:
 
+import { getKey } from "../auth/key";
+import {API_KEY, API_SOCIAL_POSTS } from '../constants';
+ 
+/**
+* Creates a new post by sending a POST request to the social API.
+*
+* This function sends the post's title, body, tags, and media to the API,
+* with optional tags and media. If the request is successful, it will
+* redirect the user to the homepage and display a success message.
+* If the request fails, an error message is displayed.
+*
+* @async
+* @param {Object} postData - An object containing the post data.
+* @param {string} postData.title - The title of the post.
+* @param {string} postData.body - The body/content of the post.
+* @param {string[]|string} [postData.tags] - Optional tags for the post, can be an array or a single tag.
+* @param {string} [postData.media] - Optional URL of the media (e.g., image) to be included in the post.
+*
+* @returns {Promise<void>} A promise that resolves if the post is created successfully.
+* Displays a success message and redirects the user to the homepage.
+* If an error occurs, it logs the error and displays an error message.
+*
+* @throws Will throw an error if the network request fails or the server response is not ok.
+*/
 export async function createPost({ title, body, tags, media }) {
-
-    // document.addEventListener('DOMContentLoaded', () => {
-
-    //     console.log('Create Post page loaded');
-
-    //     // Get username from localStorage
-    //     const username = localStorage.getItem("username");
-    //     document.getElementById('welcome-username').innerHTML = "&nbsp;" + (username ? JSON.parse(username) : "Guest");
-    //     const cleanedUsername = username.replace(/"/g, '').trim();
-    
-    //     // Image preview handling
-    //     const blogImageInput = document.getElementById('blog-image-input');
-    //     const testImageBtn = document.getElementById('test-blog-image-btn');
-    //     const blogImagePreview = document.getElementById('blog-image-preview');
-    
-    //     // Set the image preview to the default image
-    //     testImageBtn.addEventListener('click', function(event) {
-    //         event.preventDefault();
-    //         event.stopPropagation(); // Add this line
-    //         const newImageUrl = blogImageInput.value.trim();
-    //         if (newImageUrl) {
-    //             try {
-    //                 const url = new URL(newImageUrl);
-    //                 blogImagePreview.src = url.href;
-    //                 console.log('You successfully changed the image');
-    //             } catch (error) {
-    //                 console.log('Invalid URL: ', error);
-    //             }
-    //         } else {
-    //             console.log('No URL provided');
-    //         }
-    //     });
-    
-    //     // Retrieve and clean up the token
-    //     let token = localStorage.getItem("access_token");
-        
-    //     // Create a new blog post
-    //     if (token) {
-    //         token = token.replace(/"/g, '').trim();
-    //         console.log("Cleaned access token: " + token);
-            
-    //         document.getElementById('submit-post-btn').addEventListener('click', function(event) {
-    //             event.preventDefault(); // Prevent default form submission
-    
-    //             const titleInput = document.getElementById('blog-title').value;
-    //             const imageInput = document.getElementById('blog-image-input').value;
-    //             const bodyInput = document.getElementById('blog-content').value;
-    //             const tagInput = document.getElementById('blog-tag').value;
-    
-    //             if (!tagInput) {
-    //                 alert('Choose a category for your blog post.');
-    //                 return;
-    //             }
-    
-    //             const myHeaders = new Headers();
-    //             myHeaders.append("Content-Type", "application/json");
-    //             myHeaders.append("Authorization", "Bearer " + token);
-    
-    //             const raw = JSON.stringify({
-    //                 "title": titleInput,
-    //                 "body": bodyInput,
-    //                 "tags": [tagInput],
-    //                 "media": {
-    //                     "url": imageInput
-    //                 }
-    //             });
-    
-    //             const requestOptions = {
-    //                 method: "POST",
-    //                 headers: myHeaders,
-    //                 body: raw,
-    //                 redirect: "follow"
-    //             };
-    
-    //             const apiLink = API_SOCIAL_POSTS + '/' + cleanedUsername + '/';
-    
-    //             // Make the API request
-    //             fetch(apiLink, requestOptions)
-    //                 .then((response) => {
-    //                     if (response.ok) {
-    //                         return response.json(); // Handle JSON response
-    //                     } else {
-    //                         throw new Error('Network response was not ok');
-    //                     }
-    //                 })
-    //                 .then((result) => {
-    //                     console.log(result);
-    
-    //                     // Save necessary data to localStorage
-    //                     const postId = result.data.id; // Assuming result.data contains the new post ID
-    //                     localStorage.setItem('selectedPostId', postId); // Set the ID for the next page
-    //                     localStorage.setItem('title', titleInput);
-    //                     localStorage.setItem('body', bodyInput);
-    //                     localStorage.setItem('tags', tagInput);
-    //                     localStorage.setItem('blog_image', imageInput);
-    
-    //                     // Redirect to the read.html page
-    //                     window.location.href = 'read.html';
-    //                 })
-    //                 .catch((error) => {
-    //                     console.error('Error:', error);
-    //                     alert('An error occurred. Please try again.');
-    //                 });
-    //         });
-    //     } else {
-    //         alert('You must be logged in to create a blog post.');
-    //     }
-    // });
-
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+ 
+    // Add the API key to the headers
+    myHeaders.append("X-Noroff-API-Key", API_KEY);
+ 
+    // Include the access token for authorization
+    const token = await getKey();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+ 
+    const postInput = {
+        title,
+        body,
+    };
+ 
+    if (tags) {
+        postInput.tags = Array.isArray(tags) ? tags : [tags];
+    }
+ 
+    if (media) {
+        postInput.media = {
+            url: media,
+            alt: "Image alt text",
+        };
+    }
+ 
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: JSON.stringify(postInput),
+    };
+ 
+    try {
+        const response = await fetch(API_SOCIAL_POSTS, requestOptions);
+        const result = await response.json();
+ 
+        if (response.ok) {
+            alert("Post created successfully");
+            window.location.assign("/");
+        } else {
+            console.error(result);
+            alert("Post could not be created: " + result.message);
+        }
+    } catch (error) {
+        console.error("Error while creating post:", error);
+        alert("Failed to create the post. Please try again later.");
+    }
 }

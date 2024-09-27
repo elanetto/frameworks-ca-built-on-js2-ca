@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Noroff FED2 JS2 CA</title>
-    <script type="module" src="/src/app.js"></script>
+    <script type="module" src="../../src/app.js"></script>
   </head>
   <body>
 
@@ -15,17 +15,15 @@
           <ul>
               <li>
                   <label for="blog-title">Title:</label>
-                  <input id="blog-title" placeholder="Title" type="text">
+                  <input id="title" placeholder="Title" type="text">
               </li>
               <li>
                   <label for="blog-image">Image:</label>
-                  <input id="blog-image-input" placeholder="Paste URL for image here" type="text">
-                  <button id="test-blog-image-btn">Test image</button>
-                  <img id="blog-image-preview" src="https://github.com/elanetto/images/blob/main/img/adventure/adventure-img_optimized_200.png?raw=true" alt="blogpost image">
+                  <input id="media" placeholder="Paste URL for image here" type="text">
               </li>
               <li>
-                  <label for="blog-tag">Choose a tag:</label>
-                  <select id="blog-tag" name="tag" required>
+                  <label for="tag">Choose a tag:</label>
+                  <select id="tags" name="tag" required>
                       <option value="" disabled selected>Choose a tag</option>
                       <option value="Quest">Quest</option>
                       <option value="Loot">Loot</option>
@@ -35,16 +33,12 @@
                   </select>
               </li>
               <li>
-                  <label for="blog-content">Main content text:</label>
-                  <textarea id="blog-content" class="input-blog-body" placeholder="content" type="text"></textarea>
+                  <label for="body">Main content text:</label>
+                  <textarea id="body" class="input-blog-body" placeholder="content" type="text"></textarea>
               </li>
           </ul>
           <button class="btn-admin" id="submit-post-btn" type="submit">Send Scroll</button>
       </div>
     </form>
-
-    <!-- Add this element -->
-    <p id="welcome-username"></p>
-
   </body>
 </html>
