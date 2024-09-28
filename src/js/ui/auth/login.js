@@ -15,13 +15,12 @@ export async function onLogin(event) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Login response:', data); // Add this line to log the response
         if (data.data) {
             alert("User logged in successfully!");
             localStorage.setItem('authToken', data.data.accessToken);
+            localStorage.setItem('username', data.data.name);
             // window.location.href = '/dashboard';
         } else {
-            console.log(data)
             throw new Error('Invalid username or password');
         }
     })
