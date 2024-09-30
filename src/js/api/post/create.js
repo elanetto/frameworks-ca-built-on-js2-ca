@@ -1,75 +1,44 @@
-// not my code:
+import { API_SOCIAL_POSTS, API_KEY } from "../../api/constants.js"; // Import your constants
 
-import { getKey } from "../auth/key";
-import {API_KEY, API_SOCIAL_POSTS } from '../constants';
- 
-/**
-* Creates a new post by sending a POST request to the social API.
-*
-* This function sends the post's title, body, tags, and media to the API,
-* with optional tags and media. If the request is successful, it will
-* redirect the user to the homepage and display a success message.
-* If the request fails, an error message is displayed.
-*
-* @async
-* @param {Object} postData - An object containing the post data.
-* @param {string} postData.title - The title of the post.
-* @param {string} postData.body - The body/content of the post.
-* @param {string[]|string} [postData.tags] - Optional tags for the post, can be an array or a single tag.
-* @param {string} [postData.media] - Optional URL of the media (e.g., image) to be included in the post.
-*
-* @returns {Promise<void>} A promise that resolves if the post is created successfully.
-* Displays a success message and redirects the user to the homepage.
-* If an error occurs, it logs the error and displays an error message.
-*
-* @throws Will throw an error if the network request fails or the server response is not ok.
-*/
-export async function createPost({ title, body, tags, media }) {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
- 
-    // Add the API key to the headers
-    myHeaders.append("X-Noroff-API-Key", API_KEY);
- 
-    // Include the access token for authorization
-    const token = await getKey();
-    myHeaders.append("Authorization", `Bearer ${token}`);
- 
-    const postInput = {
-        title,
-        body,
-    };
- 
-    if (tags) {
-        postInput.tags = Array.isArray(tags) ? tags : [tags];
-    }
- 
-    if (media) {
-        postInput.media = {
-            url: media,
-            alt: "Image alt text",
-        };
-    }
- 
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: JSON.stringify(postInput),
-    };
- 
+// Function to create a post via the API
+export async function createPost({ title, body, media, tags }) {
     try {
-        const response = await fetch(API_SOCIAL_POSTS, requestOptions);
-        const result = await response.json();
- 
-        if (response.ok) {
-            alert("Post created successfully");
-            window.location.assign("/");
-        } else {
-            console.error(result);
-            alert("Post could not be created: " + result.message);
+        // Retrieve the access token from session storage
+        const accessToken = sessionStorage.getItem('accessToken');
+
+        console.log("Access Token:", accessToken);
+        console.log("API Key:", API_KEY);
+
+        if (!accessToken) {
+            throw new Error("Access token not found in session storage.");
         }
+
+        // Create the headers object
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`,
+                'X-Noroff-API-Key': API_KEY,
+            },
+            body: JSON.stringify({ title, body, tags, media }) // Include all necessary fields
+        };
+
+        console.log("Sending POST request to:", API_SOCIAL_POSTS);
+        console.log("Request Options:", options);
+
+        // Send the request
+        const response = await fetch(API_SOCIAL_POSTS, options);
+        const data = await response.json();
+        console.log("Response Data:", data);
+
+        if (!response.ok) {
+            throw new Error(data.errors ? data.errors[0].message : "An error occurred");
+        }
+
+        return { data, ok: response.ok };
     } catch (error) {
-        console.error("Error while creating post:", error);
-        alert("Failed to create the post. Please try again later.");
+        console.error('Error in createPost:', error);
+        throw error;
     }
 }
