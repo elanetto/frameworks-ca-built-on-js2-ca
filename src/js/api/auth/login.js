@@ -19,7 +19,6 @@ export async function login({ email, password }) {
         }
     
         const data = await response.json();
-        
         if (data?.data?.accessToken) {
             localStorage.setItem('accessToken', data.data.accessToken);
             localStorage.setItem('userName', data.data.name);
