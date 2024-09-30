@@ -1,31 +1,24 @@
-import { API_AUTH_LOGIN } from "../../api/constants";
+import { login } from '../../api/auth/login.js';
+
+// test
+console.log("JS-login page under ui/auth/login.js loaded");
 
 export async function onLogin(event) {
-    event.preventDefault();
+  event.preventDefault(); 
+  
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
 
-    const email = document.forms.login.email.value;
-    const password = document.forms.login.password.value;
+  try {
+    const result = await login({ email, password });
 
-    fetch(API_AUTH_LOGIN, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Login response:', data); // Add this line to log the response
-        if (data.data) {
-            alert("User logged in successfully!");
-            localStorage.setItem('authToken', data.data.accessToken);
-            // window.location.href = '/dashboard';
-        } else {
-            console.log(data)
-            throw new Error('Invalid username or password');
-        }
-    })
-    .catch(error => {
-        console.error(error);
-    });
+    if (result.error) {
+      alert("Login failed: " + result.error);
+    } else {
+      window.location.href = "/";
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    alert('An unexpected error occurred. Please try again later.');
+  }
 }
