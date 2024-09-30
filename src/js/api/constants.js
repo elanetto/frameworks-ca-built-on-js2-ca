@@ -1,6 +1,8 @@
 // Use Postman, or JavaScript to get your API key
 // In Workflow we will learn how to secure this information
-export const API_KEY = "878236a3-7123-4e79-8be5-1ddea4e2e25d";
+
+// API key fetch from elanetto user, from Postman:
+export const API_KEY = "64eaaa97-b05e-42ef-84d0-cfd32292f1d5";
 
 export const API_BASE = "https://v2.api.noroff.dev";
 
