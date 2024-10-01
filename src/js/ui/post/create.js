@@ -1,7 +1,8 @@
-import { createPost } from "../../api/post/create.js"; // Adjust the path as necessary
+import { createPost } from "../../api/post/create.js"; 
 
+const username = localStorage.getItem("username");
 
-// Function to handle post creation
+// post creation
 export async function onCreatePost(event) {
     event.preventDefault();
 
@@ -32,7 +33,20 @@ export async function onCreatePost(event) {
 
         if (ok) {
             alert("Post created successfully!");
-            // You may want to redirect or update the UI here
+
+            // Save the post id in local storage
+            const postIdKey = "postId"; // Define a consistent key
+            localStorage.setItem(postIdKey, data.id);
+            console.log("Post ID from UI code:", data.id);
+
+            // Later, when you want to retrieve the postId
+            const storedPostId = localStorage.getItem(postIdKey);
+            console.log("Stored Post ID from UI code:", storedPostId);
+
+            // Redirect to the post details page
+            // window.location.href = `../post/index.html/?postId=${postId}`; <-- wrong path
+            // window.location.href = "../../api/post/index.html/?postId=" + postId; <-- wrong path
+
         } else {
             alert("Registration failed. " + (data.errors[0].message || "Check your input and try again."));
         }
