@@ -31,7 +31,6 @@ export async function readPost() {
     }
 
     const result = await response.json();
-    console.log('API Response:', result);
     return result.data;
   } 
   catch (error) {

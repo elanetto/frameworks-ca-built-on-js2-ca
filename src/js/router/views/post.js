@@ -25,16 +25,18 @@ async function renderPost() {
         const loggedInUserName = localStorage.getItem('userName');
         if (loggedInUserName === post.author.name) {
             const editButton = document.createElement('button');
+            editButton.id = 'edit-button';
             editButton.textContent = 'Edit';
             editButton.addEventListener('click', () => {
                 window.location.href = `/post/edit/?postID=${post.id}`;
             });
 
             const deleteButton = document.createElement('button');
+            deleteButton.id = 'delete-button';
             deleteButton.textContent = 'Delete';
             deleteButton.addEventListener('click', async () => {
                 if (confirm("Are you sure you want to delete this post?")) {
-                    // await deletePost(post.id);
+                    deletePost(post.id);
                 }
             });
 
