@@ -1,6 +1,9 @@
 // This function controls which JavaScript file is loaded on which page
 // In order to add additional pages, you will need to implement them below
-// You may change the behavior or approach of this file if you choose
+// You may change the behaviour or approach of this file if you choose
+
+console.log("Hello! This is from the router index.js file");
+
 export default async function router(pathname = window.location.pathname) {
   switch (pathname) {
     case "/":
