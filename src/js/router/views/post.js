@@ -1,25 +1,18 @@
-alert("Single Post Page");
-
-import { readPost } from '../../api/post/read';
-import { deletePost } from '../../api/post/delete';
-import { setLogoutListener } from '../../ui/global/logout';
+import { readPost } from "../../api/post/read";
+// import { deletePost } from '../../api/post/delete';
+// import { setLogoutListener } from '../../ui/global/logout';
 
 document.addEventListener('DOMContentLoaded', () => {
-    setLogoutListener();
+    // setLogoutListener();
 });
 
-export function getPostIDFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('postId');
-}
-
 async function renderPost() {
-    const postID = getPostIDFromURL();
+    const postID = localStorage.getItem('selectedPostId');
     console.log('Post ID:', postID);
 
     try {
         console.log('Fetching post with ID:', postID);
-        const post = await readPost(postID);
+        const post = await readPost();
         console.log('Fetched post:', post); 
 
         if (!post) {
@@ -29,6 +22,56 @@ async function renderPost() {
 
         const postContainer = document.getElementById('post-container');
 
+        const loggedInUserName = localStorage.getItem('userName');
+        if (loggedInUserName === post.author.name) {
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit';
+            editButton.addEventListener('click', () => {
+                window.location.href = `/post/edit/?postID=${post.id}`;
+            });
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', async () => {
+                if (confirm("Are you sure you want to delete this post?")) {
+                    // await deletePost(post.id);
+                }
+            });
+
+            const buttonContainer = document.createElement('div');
+            buttonContainer.id = 'button-container';
+            buttonContainer.appendChild(editButton);
+            buttonContainer.appendChild(deleteButton);
+
+            postContainer.appendChild(buttonContainer);
+        }
+
+        const dateTagContainer = document.createElement('div');
+        dateTagContainer.id = 'date-tag-container';
+        
+        const dateUpdated = document.createElement('p');
+        dateUpdated.id = 'date-updated';
+        dateUpdated.textContent = `Last updated: ${new Date(post.updated).toLocaleDateString()}`;
+        
+        const tags = document.createElement('p');
+        tags.id = 'tags';
+        tags.textContent = `Tags: ${post.tags.join(', ')}`;
+        
+        dateTagContainer.appendChild(dateUpdated);
+        dateTagContainer.appendChild(tags);
+        
+        postContainer.appendChild(dateTagContainer);
+        
+        const postImage = document.createElement('img');
+        postImage.id = 'post-image';
+        if (post.media) {
+            postImage.src = post.media.url;
+            postImage.alt = post.media.alt;
+        } else {
+            postImage.src = '';
+            postImage.alt = '';
+        }
+        
         const title = document.createElement('h1');
         title.id = 'post-title';
         title.textContent = post.title;
@@ -37,16 +80,9 @@ async function renderPost() {
         body.id = 'post-body';
         body.textContent = post.body;
         
-        const image = document.createElement('div');
-        image.id = 'post-image';
-        if (post.media) {
-            image.style.backgroundImage = `url(${post.media.url})`;
-            image.style.backgroundRepeat = 'no-repeat';
-            image.style.backgroundSize = 'cover';
-            image.style.backgroundPosition = 'center';
-        } else {
-            image.style.backgroundImage = '';
-        }
+        postContainer.appendChild(postImage);
+        postContainer.appendChild(title);
+        postContainer.appendChild(body);
         
         const authorContainer = document.createElement('div');
         authorContainer.id = 'author-container';
@@ -66,35 +102,7 @@ async function renderPost() {
         authorContainer.appendChild(authorAvatar);
         authorContainer.appendChild(authorName);
         
-        const dateUpdated = document.createElement('p');
-        dateUpdated.id = 'date-updated';
-        dateUpdated.textContent = `Last updated: ${new Date(post.updated).toLocaleDateString()}`;
-
-        const loggedInUserName = localStorage.getItem('userName');
-        if (loggedInUserName === post.author.name) {
-            const editButton = document.createElement('button');
-            editButton.textContent = 'Edit';
-            editButton.addEventListener('click', () => {
-                window.location.href = `/post/edit/?postID=${post.id}`;
-            });
-
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Delete';
-            deleteButton.addEventListener('click', async () => {
-                if (confirm("Are you sure you want to delete this post?")) {
-                    await deletePost(postID);
-                }
-            });
-
-            postContainer.appendChild(editButton);
-            postContainer.appendChild(deleteButton);
-        }
-
-        postContainer.appendChild(title);
-        postContainer.appendChild(body);
-        postContainer.appendChild(image);
         postContainer.appendChild(authorContainer);
-        postContainer.appendChild(dateUpdated);
     } catch (error) {
         console.error('Error fetching post:', error.message);
         const errorMsg = document.createElement('div');

@@ -30,16 +30,16 @@ export async function createPost({ title, body, media, tags }) {
         // Send the request
         const response = await fetch(API_SOCIAL_POSTS, options);
         const data = await response.json();
-        console.log("Response Data:", data);
+        console.log("Response Data from API:", data);
         
         // Save the post id in local storage
-        const postIdKey = "postId"; // Define a consistent key
+        const postIdKey = "postIdKey"; // Define a consistent key
         localStorage.setItem(postIdKey, data.id);
-        console.log("Post ID from API code:", data.id);
+        console.log("Post ID from API code from API:", data.id);
 
         // Later, when you want to retrieve the postId
         const storedPostId = localStorage.getItem(postIdKey);
-        console.log("Stored Post ID from API code:", storedPostId);
+        console.log("Stored Post ID from API code from API:", storedPostId);
 
         if (!response.ok) {
             throw new Error(data.errors ? data.errors[0].message : "An error occurred");
