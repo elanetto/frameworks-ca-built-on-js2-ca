@@ -4,13 +4,13 @@ import { API_SOCIAL_POSTS, API_KEY } from "../../api/constants.js"; // Import yo
 export async function createPost({ title, body, media, tags }) {
     try {
         // Retrieve the access token from session storage
-        const accessToken = sessionStorage.getItem('accessToken');
+        const accessToken = localStorage.getItem('accessToken');
 
         console.log("Access Token:", accessToken);
         console.log("API Key:", API_KEY);
 
         if (!accessToken) {
-            throw new Error("Access token not found in session storage.");
+            throw new Error("Access token not found in local storage.");
         }
 
         // Create the headers object
@@ -31,14 +31,27 @@ export async function createPost({ title, body, media, tags }) {
         const response = await fetch(API_SOCIAL_POSTS, options);
         const data = await response.json();
         console.log("Response Data:", data);
+        
+        // Save the post id in local storage
+        const postIdKey = "postId"; // Define a consistent key
+        localStorage.setItem(postIdKey, data.id);
+        console.log("Post ID from API code:", data.id);
+
+        // Later, when you want to retrieve the postId
+        const storedPostId = localStorage.getItem(postIdKey);
+        console.log("Stored Post ID from API code:", storedPostId);
 
         if (!response.ok) {
             throw new Error(data.errors ? data.errors[0].message : "An error occurred");
         }
 
         return { data, ok: response.ok };
+
+
     } catch (error) {
         console.error('Error in createPost:', error);
         throw error;
     }
+
+    
 }
