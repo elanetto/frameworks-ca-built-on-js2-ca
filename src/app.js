@@ -10,4 +10,8 @@ import { setLogoutListener } from "./js/ui/global/logout";
 
 const logoutButton = document.getElementById("logout");
 
-logoutButton.addEventListener("click", setLogoutListener);
+if (localStorage.getItem("accessToken") === true) {
+    logoutButton.style.display = "none";
+} else {
+    logoutButton.addEventListener("click", setLogoutListener);
+}
