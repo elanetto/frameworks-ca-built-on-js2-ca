@@ -1,9 +1,9 @@
 import { readPost } from "../../api/post/read";
-// import { deletePost } from '../../api/post/delete';
-// import { setLogoutListener } from '../../ui/global/logout';
+import { deletePost } from '../../api/post/delete';
+import { setLogoutListener } from '../../ui/global/logout';
 
 document.addEventListener('DOMContentLoaded', () => {
-    // setLogoutListener();
+    setLogoutListener();
 });
 
 async function renderPost() {
@@ -71,6 +71,7 @@ async function renderPost() {
             postImage.src = '';
             postImage.alt = '';
         }
+        postImage.style.width = '500px';
         
         const title = document.createElement('h1');
         title.id = 'post-title';

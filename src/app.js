@@ -10,4 +10,5 @@ import { setLogoutListener } from "./js/ui/global/logout";
 
 const logoutButton = document.getElementById("logout");
 
-logoutButton.addEventListener("click", setLogoutListener);
+// logoutButton.addEventListener("click", setLogoutListener);
+document.getElementById("logout")?.addEventListener("click", setLogoutListener);
