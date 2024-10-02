@@ -55,7 +55,7 @@ export async function onCreatePost(event) {
         console.log("Post ID from API code from UI:", postId);
 
         // Redirect to the post details page
-        window.location.href = "./index.html";
+        window.location.href = "./post/";
 
       } else {
         console.error("Error: result.data or result.data.id is undefined");

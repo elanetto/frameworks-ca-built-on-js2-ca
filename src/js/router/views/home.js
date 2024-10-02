@@ -28,7 +28,7 @@ async function renderPosts() {
       `;
       postElement.addEventListener('click', () => {
         localStorage.setItem('selectedPostId', post.id);
-        window.location.href = "../post/index.html";
+        window.location.href = "../post/";
       });
       postsContainer.appendChild(postElement);
     });
