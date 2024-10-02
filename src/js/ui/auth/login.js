@@ -1,7 +1,4 @@
-import { login } from '../../api/auth/login.js';
-
-// test
-console.log("JS-login page under ui/auth/login.js loaded");
+import { login } from '../../api/auth/login';
 
 export async function onLogin(event) {
   event.preventDefault(); 
@@ -15,6 +12,7 @@ export async function onLogin(event) {
     if (result.error) {
       alert("Login failed: " + result.error);
     } else {
+      alert("Login successful!");
       window.location.href = "/";
     }
   } catch (error) {

@@ -1,3 +1,5 @@
+import { API_AUTH_REGISTER } from "../constants";
+
 export async function register({
   name,
   email,
@@ -15,7 +17,6 @@ export async function register({
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${API_KEY}`,
       },
       body: JSON.stringify({
         name,
@@ -30,7 +31,7 @@ export async function register({
     if (data.success) {
       console.log("User registered successfully!");
     } else {
-      throw new Error(data.message);
+      throw new Error(data.errors[0].message);
     }
   }
   catch (error) {

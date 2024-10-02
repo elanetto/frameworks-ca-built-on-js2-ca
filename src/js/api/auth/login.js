@@ -1,7 +1,4 @@
-import { API_AUTH_LOGIN, API_KEY } from '../constants';
-
-// test
-console.log("JS-login page under api/auth/login.js loaded");
+import { API_AUTH_LOGIN } from '../constants';
 
 export async function login({ email, password }) {
     try {
@@ -9,7 +6,6 @@ export async function login({ email, password }) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "X-Noroff-API-Key": API_KEY,
             },
             body: JSON.stringify({ email, password }),
         });
